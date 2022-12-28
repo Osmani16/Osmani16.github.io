@@ -46,8 +46,12 @@ const GET_AGENTS = async (count, op) => {
   agent_count = AGENTS.length - 1;
 
   if (op) {
-    let is_player = AGENTS[eval(`${count}${op}${1}`)].isPlayableCharacter;
-
+    let is_player;
+    if (op == '+') {
+      is_player = AGENTS[count + 1].isPlayableCharacter;
+    } else {
+      is_player = AGENTS[count - 1].isPlayableCharacter;
+    }
     return is_player;
   }
 }
@@ -85,4 +89,4 @@ RIGHT_BTN.addEventListener('click', async () => {
     counter++;
   }
   GET_AGENTS(counter, '+')
-});
+})
