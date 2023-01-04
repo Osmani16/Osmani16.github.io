@@ -10,9 +10,9 @@ const BTNS = document.querySelectorAll('.btn');
 let counter = 0;
 let agent_count = 0;
 
-const GET_AGENTS = async (count, op) => {
+const GET_AGENTS = async (count) => {
   // Get agent data from valorant API
-  const FETCH_DATA = await fetch('https://valorant-api.com/v1/agents/');
+  const FETCH_DATA = await fetch('https://valorant-api.com/v1/agents?isPlayableCharacter=true');
   const AGENT_DATA = await FETCH_DATA.json();
   const AGENTS = AGENT_DATA.data;
   // reset the abilities for every new agent
@@ -44,16 +44,6 @@ const GET_AGENTS = async (count, op) => {
     });
   }
   agent_count = AGENTS.length - 1;
-
-  if (op) {
-    let is_player;
-    if (op == '+') {
-      is_player = AGENTS[count + 1].isPlayableCharacter;
-    } else {
-      is_player = AGENTS[count - 1].isPlayableCharacter;
-    }
-    return is_player;
-  }
 }
 
 // use the first agent in the list as the default
@@ -64,14 +54,8 @@ LEFT_BTN.addEventListener('click', async () => {
   if (counter <= 0) {
     return;
   }
-  // valorant api has 2 sova agents
-  // this is to make sure the non playable character sova is skipped
-  const is_playable = await GET_AGENTS(counter, '-');
   counter--;
-  if (!(is_playable)) {
-    counter--;
-  }
-  GET_AGENTS(counter, '-')
+  GET_AGENTS(counter)
 });
 
 //
@@ -79,16 +63,6 @@ RIGHT_BTN.addEventListener('click', async () => {
   if (counter >= agent_count) {
     return;
   }
-
-  const is_playable = await GET_AGENTS(counter, '+');
-
-  //
-  //
   counter++
-  if (!(is_playable)) {
-    counter++;
-  }
-  GET_AGENTS(counter, '+')
+  GET_AGENTS(counter)
 })
-
-//
